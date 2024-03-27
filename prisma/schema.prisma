@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role{
+  USER
+  LAWYER
+}
+
+model User{
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password       String          
+  NIK            Int
+  role           Role
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([email], name: "idx_user_email")
+}
+
+model Lawyer{
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password       String
+  NIK            Int
+  role           Role
+  profile        LawyerProfile[]
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([email], name: "idx_lawyer_email")
+}
+
+model LawyerProfile{
+  id             Int             @id @default(autoincrement())
+  lawyerId       Int
+  alumnus        String?
+  STRNumber      String?
+  specialization String[]
+  experience     String?
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  lawyer         Lawyer          @relation(fields: [lawyerId], references: [id], onDelete: Cascade)
+
+  @@index([lawyerId], name: "idx_lawyerprofile_lawyer")
+}
