@@ -8,10 +8,14 @@ const express = require("express");
 const errorFormatter = require("./middleware/errorFormatter");
 const applyMiddleware = require("./middleware/index");
 
+const userRoutes = require("./routes/userRoutes");
+
 const app = express();
 app.use(cors());
 
 applyMiddleware(app);
+
+app.use("/api/user", userRoutes);
 
 app.use((req, res, next) => {
   console.log(req.method, req.path);
