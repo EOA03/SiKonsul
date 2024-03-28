@@ -17,7 +17,7 @@ model User{
   name           String
   email          String          @unique
   password       String          
-  NIK            Int
+  NIK            String
   role           Role
 
   createdAt      DateTime        @default(now())
@@ -31,7 +31,7 @@ model Lawyer{
   name           String
   email          String          @unique
   password       String
-  NIK            Int
+  NIK            String
   role           Role
   profile        LawyerProfile[]
 
