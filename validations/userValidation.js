@@ -14,3 +14,13 @@ exports.registerValidation = [
 exports.loginValidation = [
   body("email").isEmail().withMessage("Enter a valid email"),
 ];
+
+exports.changeEmailValidation = [
+  body("email").isEmail().withMessage("Enter a valid email"),
+];
+
+exports.changePasswordValidation = [
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+];

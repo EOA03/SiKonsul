@@ -29,6 +29,39 @@ class userModel {
     const tokenExpired = process.env.ACCESS_TOKEN_EXPIRATION;
     return jwt.sign({ userId }, secret, { expiresIn: tokenExpired });
   }
+
+  static async findUserById(userId) {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        NIK: true,
+      },
+    });
+  }
+
+  static async changeEmail(userId, email) {
+    const newEmail = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        email,
+      },
+    });
+    return newEmail;
+  }
+
+  static async changePassword(userId, password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newPassword = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    return newPassword;
+  }
 }
 
 module.exports = userModel;
