@@ -2,6 +2,6 @@ const express = require("express");
 const router = express.Router();
 const newsController = require("../controllers/newsController");
 
-router.get("/news/feed", newsController.getLatestNews);
+router.get("/feed", newsController.getNewsFeed);
 
 module.exports = router;
