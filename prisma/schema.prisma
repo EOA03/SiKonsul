@@ -11,6 +11,7 @@ datasource db {
 enum Role{
   USER
   LAWYER
+  ADMIN
 }
 
 model User{
@@ -19,7 +20,9 @@ model User{
   email          String          @unique
   password       String          
   NIK            String
-  role           Role
+  occupation     String
+  role           Role            @default(USER)
+  isPremium      Boolean         @default(false)
 
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -34,6 +37,8 @@ model Lawyer{
   password       String
   NIK            String
   role           Role
+  isPremium      Boolean         @default(false)
+  rating         Float           @default(0)
   profile        LawyerProfile[]
 
   createdAt      DateTime        @default(now())
