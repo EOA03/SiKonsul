@@ -62,3 +62,12 @@ model LawyerProfile{
 
   @@index([lawyerId], name: "idx_lawyerprofile_lawyer")
 }
+
+model News {
+  id          Int       @id @default(autoincrement())
+  title       String
+  url         String
+  publishedAt DateTime
+
+  @@index([publishedAt], name: "idx_news_publishedAt")
+}
