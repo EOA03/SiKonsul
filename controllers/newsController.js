@@ -1,22 +1,32 @@
+const cron = require("node-cron");
+const NewsAPI = require("newsapi");
+const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { successResponse, errorResponse } = require("../utils/response");
 
-exports.getLatestNews = async (req, res) => {
+const fetchTopLegalHeadlines = async () => {
+  console.log("Fetching top legal headlines every hour");
   try {
-    const newsFeed = await prisma.news.findMany({
-      orderBy: {
-        publishedAt: "desc",
-      },
-      select: {
-        title: true,
-        url: true,
-        publishedAt: true,
-      },
+    const response = await newsapi.v2.topHeadlines({
+      q: "hukum OR peradilan OR undang-undang",
+      country: "id",
+      pageSize: 3,
     });
-    return successResponse(res, "Latest news fetched successfully", newsFeed);
+
+    for (const article of response.articles) {
+      await prisma.news.upsert({
+        where: { url: article.url },
+        update: {},
+        create: {
+          title: article.title,
+          url: article.url,
+          publishedAt: new Date(article.publishedAt),
+        },
+      });
+    }
   } catch (error) {
-    console.error(error);
-    return errorResponse(res, "Server error while fetching news", 500);
+    console.error("Error fetching top legal headlines:", error);
   }
 };
+
+cron.schedule("0 * * * *", fetchTopLegalHeadlines);
