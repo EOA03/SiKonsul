@@ -62,6 +62,20 @@ class userModel {
     });
     return newPassword;
   }
+
+  static async blockUser(userId) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { isBlocked: true },
+    });
+  }
+
+  static async unblockUser(userId) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { isBlocked: false },
+    });
+  }
 }
 
 module.exports = userModel;

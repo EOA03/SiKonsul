@@ -29,6 +29,20 @@ class lawyerModel {
     const tokenExpired = process.env.ACCESS_TOKEN_EXPIRATION;
     return jwt.sign({ lawyerId }, secret, { expiresIn: tokenExpired });
   }
+
+  static async blockLawyer(lawyerId) {
+    return await prisma.lawyer.update({
+      where: { id: lawyerId },
+      data: { isBlocked: true },
+    });
+  }
+
+  static async unblockLawyer(lawyerId) {
+    return await prisma.lawyer.update({
+      where: { id: lawyerId },
+      data: { isBlocked: false },
+    });
+  }
 }
 
 module.exports = lawyerModel;
