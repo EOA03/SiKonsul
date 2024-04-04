@@ -8,16 +8,16 @@ const axios = require("axios");
 const fetchTopLegalHeadlines = async () => {
   console.log("Fetching top legal headlines every hour");
   try {
-    const response = await axios.get("https://newsapi.org/v2/top-headlines", {
+    const response = await axios.get("https://newsapi.org/v2/everything", {
       params: {
         q: "law",
-        country: "id",
-        pageSize: 3,
         apiKey: process.env.NEWSAPI_KEY,
       },
     });
 
-    const articles = response.data.articles;
+    const articles = response.data.articles.slice(0, 3);
+
+    console.log(articles);
     for (const article of articles) {
       await prisma.news.upsert({
         where: { url: article.url },
@@ -29,6 +29,23 @@ const fetchTopLegalHeadlines = async () => {
         },
       });
     }
+
+    const allNews = await prisma.news.findMany({
+      orderBy: {
+        publishedAt: "asc",
+      },
+    });
+
+    if (allNews.length > 3) {
+      const numberOfNewsToDelete = allNews.length - 3;
+      for (let i = 0; i < numberOfNewsToDelete; i++) {
+        await prisma.news.delete({
+          where: {
+            id: allNews[i].id,
+          },
+        });
+      }
+    }
   } catch (error) {
     console.error("Error fetching top legal headlines:", error);
   }
@@ -37,7 +54,6 @@ const fetchTopLegalHeadlines = async () => {
 const fetchNewsFromDB = async () => {
   console.log("Fetching news from database");
   const news = await prisma.news.findMany();
-  console.log(news);
   return news;
 };
 
@@ -53,10 +69,21 @@ const getNewsFeed = async (req, res) => {
 
 fetchTopLegalHeadlines();
 
-cron.schedule("0 * * * * *", fetchTopLegalHeadlines);
+cron.schedule("0 * * * *", fetchTopLegalHeadlines);
 
 module.exports = {
   fetchTopLegalHeadlines,
   fetchNewsFromDB,
   getNewsFeed,
 };
+
+const deleteAllNews = async () => {
+  try {
+    const result = await prisma.news.deleteMany();
+    console.log(`Berhasil menghapus ${result.count} berita.`);
+  } catch (error) {
+    console.error("Terjadi kesalahan saat menghapus data berita:", error);
+  }
+};
+
+// deleteAllNews();
