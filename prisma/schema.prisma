@@ -20,7 +20,7 @@ model User{
   email          String          @unique
   password       String          
   NIK            String
-  occupation     String
+  occupation     String?
   role           Role            @default(USER)
   isPremium      Boolean         @default(false)
 
@@ -61,4 +61,13 @@ model LawyerProfile{
   lawyer         Lawyer          @relation(fields: [lawyerId], references: [id], onDelete: Cascade)
 
   @@index([lawyerId], name: "idx_lawyerprofile_lawyer")
+}
+
+model News {
+  id          Int       @id @default(autoincrement())
+  title       String
+  url         String    @unique
+  publishedAt DateTime
+
+  @@index([publishedAt], name: "idx_news_publishedAt")
 }
