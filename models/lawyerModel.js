@@ -10,7 +10,7 @@ class lawyerModel {
     });
   }
 
-  static async createLawyer(name, email, password, NIK) {
+  static async createLawyer(name, email, password, NIK, address, university, specialization, description) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newLawyer = await prisma.lawyer.create({
       data: {
@@ -18,6 +18,10 @@ class lawyerModel {
         email,
         password: hashedPassword,
         NIK,
+        address,
+        university,
+        specialization,
+        description,
         role: "LAWYER",
       },
     });

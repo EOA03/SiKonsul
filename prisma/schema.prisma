@@ -35,7 +35,11 @@ model Lawyer{
   name           String
   email          String          @unique
   password       String
-  NIK            String
+  NIK            Int
+  address        String
+  university     String
+  specialization String
+  description    String
   role           Role
   isPremium      Boolean         @default(false)
   rating         Float           @default(0)

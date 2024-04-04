@@ -3,14 +3,14 @@ const { successResponse, errorResponse } = require("../utils/response");
 const bcrypt = require("bcrypt");
 
 exports.register = async (req, res) => {
-  const { name, email, password, NIK } = req.body;
+  const { name, email, password, NIK, address, university, specialization, description } = req.body;
   try {
     const existingLawyer = await lawyerModel.findLawyerByEmail(email);
     if (existingLawyer) {
       return errorResponse(res, "Email is already in use", 400);
     }
 
-    const lawyer = await lawyerModel.createLawyer(name, email, password, NIK);
+    const lawyer = await lawyerModel.createLawyer(name, email, password, NIK, address, university, specialization, description);
 
     return successResponse(res, "Lawyer registered successfully", {
       lawyerId: lawyer.id,
