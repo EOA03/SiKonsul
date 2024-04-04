@@ -74,7 +74,6 @@ model News {
 model Specialization {
   id               Int                  @id @default(autoincrement())
   name             String               @unique
-  description      String?
   lawyerProfiles   LawyerSpecialization[]
 
   @@index([name], name: "idx_specialization_name")
