@@ -32,6 +32,10 @@ model Lawyer{
   email          String          @unique
   password       String
   NIK            Int
+  address        String
+  university     String
+  specialization String
+  description    String
   role           Role
   profile        LawyerProfile[]
 
