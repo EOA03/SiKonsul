@@ -9,6 +9,7 @@ exports.registerValidation = [
   body("NIK")
     .isLength({ min: 16, max: 16 })
     .withMessage("NIK must be 16 characters long"),
+  body("occupation").optional()
 ];
 
 exports.loginValidation = [

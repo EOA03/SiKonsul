@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 
 class userModel {
   static async findUserByEmail(email) {
-    return await prisma.user.findUnique({
+    return await prisma.user.findFirst({
       where: { email },
     });
   }
 
-  static async createUser(name, email, password, NIK) {
+  static async createUser(name, email, password, NIK, occupation) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
@@ -18,6 +18,7 @@ class userModel {
         email,
         password: hashedPassword,
         NIK,
+        occupation,
         role: "USER",
       },
     });
