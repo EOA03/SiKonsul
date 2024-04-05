@@ -77,6 +77,13 @@ class userModel {
       data: { isBlocked: false },
     });
   }
+
+  static async bePremium(userId) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { isPremium: true },
+    });
+  }
 }
 
 module.exports = userModel;

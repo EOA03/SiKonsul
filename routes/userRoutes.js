@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userAuthController");
 const profileController = require("../controllers/userProfileController");
+const premiumController = require("../controllers/premiumController");
 const authMiddleware = require("../middleware/authMiddleware");
 const userValidation = require("../validations/userValidation");
 const validateRequests = require("../middleware/validateRequests");
@@ -42,5 +43,12 @@ router.post(
   validateRequests,
   profileController.changePassword
 );
+
+router.put(
+  "/premium",
+  authMiddleware,
+  validateRequests,
+  premiumController.userPremium
+)
 
 module.exports = router;
