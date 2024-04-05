@@ -28,7 +28,7 @@ router.get(
   profileController.getUserProfile
 );
 
-router.post(
+router.put(
   "/change-email",
   authMiddleware,
   userValidation.changeEmailValidation,
@@ -36,7 +36,7 @@ router.post(
   profileController.changeEmail
 );
 
-router.post(
+router.put(
   "/change-password",
   authMiddleware,
   userValidation.changePasswordValidation,
