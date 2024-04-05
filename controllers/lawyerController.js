@@ -14,23 +14,29 @@ exports.getAllLawyers = async (req, res) => {
 exports.getLawyersBySpecialization = async (req, res) => {
   try {
     const { specializationId } = req.params;
-    const lawyers = await Lawyer.findLawyersBySpecialization(specializationId);
+    const { search, page, limit, orderBy } = req.query;
 
-    if (!lawyers.length) {
-      return errorResponse(
-        res,
-        "No lawyers found for the given specialization",
-        404
-      );
+    const result = await Lawyer.findLawyersBySpecialization({
+      specializationId,
+      search,
+      page,
+      limit,
+      orderBy,
+    });
+
+    if (result.lawyers.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No lawyers found for the given criteria." });
     }
 
-    return successResponse(res, "Lawyers fetched successfully", { lawyers });
+    return res
+      .status(200)
+      .json({ message: "Lawyers fetched successfully.", data: result });
   } catch (error) {
     console.error(error);
-    return errorResponse(
-      res,
-      "Server error while fetching lawyers by specialization",
-      500
-    );
+    return res.status(500).json({
+      message: "Server error while fetching lawyers by specialization.",
+    });
   }
 };

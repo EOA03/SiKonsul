@@ -44,20 +44,55 @@ class lawyerModel {
     });
   }
 
-  static async findLawyersBySpecialization(specializationId) {
-    return await prisma.lawyerProfile.findMany({
-      where: {
-        specialization: {
-          some: {
-            specializationId: parseInt(specializationId),
-          },
-        },
-      },
+  static async findLawyersBySpecialization({
+    specializationId,
+    search = "",
+    page = 1,
+    limit = 10,
+    orderBy = "rating:desc",
+  }) {
+    const pageNumber = parseInt(page);
+    const pageSize = parseInt(limit);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const [sortField, sortOrder] = orderBy.split(":");
+
+    const profiles = await prisma.lawyerSpecialization.findMany({
+      where: { specializationId: parseInt(specializationId) },
       include: {
-        lawyer: true,
-        specialization: true,
+        lawyerProfile: true,
       },
     });
+
+    const lawyerIds = profiles.map((profile) => profile.lawyerProfile.lawyerId);
+
+    const lawyers = await prisma.lawyer.findMany({
+      where: {
+        id: { in: lawyerIds },
+        name: {
+          contains: search,
+          mode: "insensitive",
+        },
+      },
+      orderBy: {
+        [sortField]: sortOrder,
+      },
+      skip: offset,
+      take: pageSize,
+    });
+
+    const totalRecords = await prisma.lawyer.count({
+      where: {
+        id: { in: lawyerIds },
+      },
+    });
+
+    return {
+      lawyers,
+      totalRecords,
+      totalPages: Math.ceil(totalRecords / pageSize),
+      currentPage: pageNumber,
+    };
   }
 
   static async findAllLawyers() {
