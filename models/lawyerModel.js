@@ -43,6 +43,34 @@ class lawyerModel {
       data: { isBlocked: false },
     });
   }
+
+  static async findLawyersBySpecialization(specializationId) {
+    return await prisma.lawyerProfile.findMany({
+      where: {
+        specialization: {
+          some: {
+            specializationId: parseInt(specializationId),
+          },
+        },
+      },
+      include: {
+        lawyer: true,
+        specialization: true,
+      },
+    });
+  }
+
+  static async findAllLawyers() {
+    return await prisma.lawyer.findMany({
+      include: {
+        profile: {
+          include: {
+            specialization: true,
+          },
+        },
+      },
+    });
+  }
 }
 
 module.exports = lawyerModel;

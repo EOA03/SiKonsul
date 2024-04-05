@@ -17,7 +17,7 @@ const fetchTopLegalHeadlines = async () => {
 
     const articles = response.data.articles.slice(0, 3);
 
-    console.log(articles);
+    // console.log(articles); 
     for (const article of articles) {
       await prisma.news.upsert({
         where: { url: article.url },
@@ -52,7 +52,7 @@ const fetchTopLegalHeadlines = async () => {
 };
 
 const fetchNewsFromDB = async () => {
-  console.log("Fetching news from database");
+  // console.log("Fetching news from database");
   const news = await prisma.news.findMany();
   return news;
 };
