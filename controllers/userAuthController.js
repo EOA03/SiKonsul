@@ -3,14 +3,14 @@ const { successResponse, errorResponse } = require("../utils/response");
 const bcrypt = require("bcrypt");
 
 exports.register = async (req, res) => {
-  const { name, email, password, NIK } = req.body;
+  const { name, email, password, NIK, occupation } = req.body;
   try {
     const existingUser = await userModel.findUserByEmail(email);
     if (existingUser) {
       return errorResponse(res, "Email is already in use", 400);
     }
 
-    const user = await userModel.createUser(name, email, password, NIK);
+    const user = await userModel.createUser(name, email, password, NIK, occupation);
 
     return successResponse(res, "User registered successfully", {
       userId: user.id,
