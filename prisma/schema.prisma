@@ -52,8 +52,7 @@ model LawyerProfile{
   lawyerId       Int
   alumnus        String?
   STRNumber      String?
-  specialization String[]
-  experience     String?
+  specialization LawyerSpecialization[]
 
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -70,4 +69,21 @@ model News {
   publishedAt DateTime
 
   @@index([publishedAt], name: "idx_news_publishedAt")
+}
+
+model Specialization {
+  id               Int                  @id @default(autoincrement())
+  name             String               @unique
+  lawyerProfiles   LawyerSpecialization[]
+
+  @@index([name], name: "idx_specialization_name")
+}
+
+model LawyerSpecialization {
+  lawyerProfileId  Int
+  specializationId Int
+  lawyerProfile    LawyerProfile  @relation(fields: [lawyerProfileId], references: [id])
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
+
+  @@id([lawyerProfileId, specializationId])
 }
