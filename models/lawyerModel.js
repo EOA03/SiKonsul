@@ -100,7 +100,16 @@ class lawyerModel {
       include: {
         profile: {
           include: {
-            specialization: true,
+            specialization: {
+              select: {
+                specialization: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
