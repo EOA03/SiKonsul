@@ -3,7 +3,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 const bcrypt = require("bcrypt");
 
 exports.register = async (req, res) => {
-  const { name, email, password, NIK, alumnus, STRNumber, specializationIds } =
+  const { name, email, password, NIK, address, university, description, specializationIds } =
     req.body;
   try {
     const existingLawyer = await lawyerModel.findLawyerByEmail(email);
@@ -16,8 +16,9 @@ exports.register = async (req, res) => {
       email,
       password,
       NIK,
-      alumnus,
-      STRNumber,
+      address,
+      university,
+      description,
       specializationIds
     );
 

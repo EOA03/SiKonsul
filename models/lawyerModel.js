@@ -14,8 +14,9 @@ class lawyerModel {
     email,
     password,
     NIK,
-    alumnus,
-    STRNumber,
+    address,
+    university,
+    description,
     specializationIds
   ) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,13 +42,14 @@ class lawyerModel {
         email,
         password: hashedPassword,
         NIK,
+        address,
+        university,
+        description,
         role: "LAWYER",
         isPremium: false,
         rating: 0,
         profile: {
           create: {
-            alumnus,
-            STRNumber,
             specialization: {
               createMany: {
                 data: specializationIds.map((id) => ({ specializationId: id })),
