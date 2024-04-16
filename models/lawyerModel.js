@@ -17,6 +17,8 @@ class lawyerModel {
     address,
     university,
     description,
+    alumnus,
+    STRNumber,
     specializationIds
   ) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,6 +52,8 @@ class lawyerModel {
         rating: 0,
         profile: {
           create: {
+            alumnus,
+            STRNumber,
             specialization: {
               createMany: {
                 data: specializationIds.map((id) => ({ specializationId: id })),
