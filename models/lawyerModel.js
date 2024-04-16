@@ -9,9 +9,32 @@ class lawyerModel {
       where: { email },
     });
   }
-
-  static async createLawyer(name, email, password, NIK) {
+  static async createLawyer(
+    name,
+    email,
+    password,
+    NIK,
+    alumnus,
+    STRNumber,
+    specializationIds
+  ) {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const existingSpecializations = await prisma.specialization.findMany({
+      where: { id: { in: specializationIds } },
+      select: { id: true },
+    });
+
+    const existingSpecializationIds = existingSpecializations.map((s) => s.id);
+
+    const invalidSpecializationIds = specializationIds.filter(
+      (id) => !existingSpecializationIds.includes(id)
+    );
+
+    if (invalidSpecializationIds.length > 0) {
+      return { invalidSpecializationIds };
+    }
+
     const newLawyer = await prisma.lawyer.create({
       data: {
         name,
@@ -19,9 +42,29 @@ class lawyerModel {
         password: hashedPassword,
         NIK,
         role: "LAWYER",
+        isPremium: false,
+        rating: 0,
+        profile: {
+          create: {
+            alumnus,
+            STRNumber,
+            specialization: {
+              createMany: {
+                data: specializationIds.map((id) => ({ specializationId: id })),
+              },
+            },
+          },
+        },
+      },
+      include: {
+        profile: {
+          include: {
+            specialization: true,
+          },
+        },
       },
     });
-    return newLawyer;
+    return { lawyer: newLawyer };
   }
 
   static generateToken(lawyerId) {
