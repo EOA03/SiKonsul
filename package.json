@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.12.1",
     "@supabase/supabase-js": "^2.42.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
@@ -39,9 +39,6 @@
     "requests": "^0.3.0",
     "swagger-ui-express": "^5.0.0",
     "yaml": "^2.4.1"
-  },
-  "devDependencies": {
-    "prisma": "^5.12.1"
   },
   "devDependencies": {
     "prisma": "^5.12.1"
