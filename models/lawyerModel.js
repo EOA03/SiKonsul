@@ -164,6 +164,27 @@ class lawyerModel {
       },
     });
   }
+
+  static async findLawyerById(lawyerId) {
+    return await prisma.lawyer.findUnique({
+      where: { id: lawyerId },
+      select: {
+        id: true,
+        profile: {
+          select: {
+            alumnus: true,
+            STRNumber: true,
+            specialization: {
+              select: {
+                specializationId: true,
+              },
+            },
+            // You can include other fields of LawyerProfile here if needed
+          },
+        },
+      },
+    });
+  }  
 }
 
 module.exports = lawyerModel;

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const lawyerController = require("../controllers/lawyerAuthController");
 const lawyerController2 = require("../controllers/lawyerController");
-
+const authMiddleware = require("../middleware/authMiddleware");
 const lawyerValidation = require("../validations/lawyerValidation");
 const validateRequests = require("../middleware/validateRequests");
 
@@ -23,6 +23,12 @@ router.post(
 router.get(
   "/specialization/:specializationId",
   lawyerController2.getLawyersBySpecialization
+);
+
+router.get(
+  "/profile",
+  authMiddleware,
+  lawyerController2.getLawyerProfile
 );
 
 router.get("/", lawyerController2.getAllLawyers);
