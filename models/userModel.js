@@ -86,6 +86,78 @@ class userModel {
       data: { isPremium: true },
     });
   }
+
+  static async findLawyersBySpecialization({
+    specializationId,
+    search = "",
+    page = 1,
+    limit = 10,
+    orderBy = "rating:asc",
+    isPremium,
+  }) {
+    const pageNumber = parseInt(page);
+    const pageSize = parseInt(limit);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const [sortField, sortOrder] = orderBy.split(":");
+
+    const profiles = await prisma.lawyerSpecialization.findMany({
+      where: { specializationId: parseInt(specializationId) },
+      include: {
+        lawyerProfile: true,
+      },
+    });
+
+    const lawyerIds = profiles.map((profile) => profile.lawyerProfile.lawyerId);
+
+    let lawyers;
+
+    if (isPremium) {
+      lawyers = await prisma.lawyer.findMany({
+        where: {
+          id: { in: lawyerIds },
+          name: {
+            contains: search,
+          },
+        },
+        orderBy: {
+          [sortField]: sortOrder,
+        },
+        skip: offset,
+        take: pageSize,
+      });
+    } else {
+      const freeLawyersCount = 3;
+
+      const freeLawyers = await prisma.lawyer.findMany({
+        where: {
+          id: { in: lawyerIds },
+          name: {
+            contains: search,
+          },
+        },
+        orderBy: {
+          [sortField]: sortOrder,
+        },
+        take: freeLawyersCount,
+      });
+
+      lawyers = freeLawyers;
+    }
+
+    const totalRecords = await prisma.lawyer.count({
+      where: {
+        id: { in: lawyerIds },
+      },
+    });
+
+    return {
+      lawyers,
+      totalRecords,
+      totalPages: Math.ceil(totalRecords / pageSize),
+      currentPage: pageNumber,
+    };
+  }
 }
 
 module.exports = userModel;
