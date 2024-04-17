@@ -39,6 +39,8 @@ class userModel {
         name: true,
         email: true,
         NIK: true,
+        isPremium: true,
+        occupation: true,
       },
     });
   }
