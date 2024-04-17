@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -10,6 +11,7 @@ datasource db {
 enum Role{
   USER
   LAWYER
+  ADMIN
 }
 
 model User{
@@ -17,8 +19,10 @@ model User{
   name           String
   email          String          @unique
   password       String          
-  NIK            Int
-  role           Role
+  NIK            String
+  occupation     String?
+  role           Role            @default(USER)
+  isPremium      Boolean         @default(false)
 
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -31,8 +35,13 @@ model Lawyer{
   name           String
   email          String          @unique
   password       String
-  NIK            Int
+  NIK            String
+  address        String?
+  university     String?
+  description    String?
   role           Role
+  isPremium      Boolean         @default(false)
+  rating         Float           @default(0)
   profile        LawyerProfile[]
 
   createdAt      DateTime        @default(now())
@@ -46,8 +55,7 @@ model LawyerProfile{
   lawyerId       Int
   alumnus        String?
   STRNumber      String?
-  specialization String[]
-  experience     String?
+  specialization LawyerSpecialization[]
 
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -55,4 +63,30 @@ model LawyerProfile{
   lawyer         Lawyer          @relation(fields: [lawyerId], references: [id], onDelete: Cascade)
 
   @@index([lawyerId], name: "idx_lawyerprofile_lawyer")
+}
+
+model News {
+  id          Int       @id @default(autoincrement())
+  title       String
+  url         String    @unique
+  publishedAt DateTime
+
+  @@index([publishedAt], name: "idx_news_publishedAt")
+}
+
+model Specialization {
+  id               Int                  @id @default(autoincrement())
+  name             String               @unique
+  lawyerProfiles   LawyerSpecialization[]
+
+  @@index([name], name: "idx_specialization_name")
+}
+
+model LawyerSpecialization {
+  lawyerProfileId  Int
+  specializationId Int
+  lawyerProfile    LawyerProfile  @relation(fields: [lawyerProfileId], references: [id])
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
+
+  @@id([lawyerProfileId, specializationId])
 }
