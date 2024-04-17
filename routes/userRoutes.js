@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userAuthController");
 const profileController = require("../controllers/userProfileController");
 const premiumController = require("../controllers/premiumController");
+const userController2 = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const userValidation = require("../validations/userValidation");
 const validateRequests = require("../middleware/validateRequests");
@@ -49,6 +50,13 @@ router.put(
   authMiddleware,
   validateRequests,
   premiumController.userPremium
-)
+);
+
+router.get(
+  "/lawyer/:specializationId",
+  authMiddleware,
+  validateRequests,
+  userController2.getLawyersBySpecialization
+);
 
 module.exports = router;
