@@ -94,6 +94,7 @@ class userModel {
           select: {
             alumnus: true,
             STRNumber: true,
+            experience: true,
             specialization: {
               select: {
                 specializationId: true,
