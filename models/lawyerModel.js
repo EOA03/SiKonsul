@@ -184,7 +184,11 @@ class lawyerModel {
             experience: true,
             specialization: {
               select: {
-                specializationId: true,
+                specialization: {
+                  select: {
+                    name: true,
+                  }
+                }
               },
             },
             // You can include other fields of LawyerProfile here if needed

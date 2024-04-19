@@ -159,7 +159,7 @@ class userModel {
     };
   }
 
-  static async findLawyerById(lawyerId) {
+    static async findLawyerById(lawyerId) {
     return await prisma.lawyer.findUnique({
       where: { id: parseInt(lawyerId) },
       select: {
@@ -171,7 +171,11 @@ class userModel {
             experience: true,
             specialization: {
               select: {
-                specializationId: true,
+                specialization: {
+                  select: {
+                    name: true,
+                  }
+                }
               },
             },
             // You can include other fields of LawyerProfile here if needed
