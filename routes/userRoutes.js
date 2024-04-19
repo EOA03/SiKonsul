@@ -59,4 +59,10 @@ router.get(
   userController2.getLawyersBySpecialization
 );
 
+router.get(
+  "/lawyer/profile/:lawyerId",
+  authMiddleware,
+  userController2.getLawyerProfileById
+);
+
 module.exports = router;

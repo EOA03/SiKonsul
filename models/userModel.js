@@ -158,6 +158,30 @@ class userModel {
       currentPage: pageNumber,
     };
   }
+
+  static async findLawyerById(lawyerId) {
+    return await prisma.lawyer.findUnique({
+      where: { id: parseInt(lawyerId) },
+      select: {
+        id: true,
+        profile: {
+          select: {
+            alumnus: true,
+            STRNumber: true,
+            experience: true,
+            specialization: {
+              select: {
+                specializationId: true,
+              },
+            },
+            // You can include other fields of LawyerProfile here if needed
+          },
+        },
+      },
+    });
+  }  
 }
+
+
 
 module.exports = userModel;
