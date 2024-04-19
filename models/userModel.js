@@ -87,7 +87,7 @@ class userModel {
 
   static async findLawyerById(lawyerId) {
     return await prisma.lawyer.findUnique({
-      where: { id: lawyerId },
+      where: { id: parseInt(lawyerId) },
       select: {
         id: true,
         profile: {

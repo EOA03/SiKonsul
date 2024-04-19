@@ -60,7 +60,7 @@ router.get(
 );
 
 router.get(
-  "/user/lawyer/profile/:lawyerId",
+  "/lawyer/profile/:lawyerId",
   authMiddleware,
   validateRequests,
   userController2.getLawyerProfileById

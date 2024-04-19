@@ -2,7 +2,6 @@ const userModel = require("../models/userModel");
 const { successResponse, errorResponse } = require("../utils/response");
 
 exports.getLawyerProfileById = async (req, res) => {
-    const { userId } = req.user;
     try {
       const { lawyerId } = req.params;
   
