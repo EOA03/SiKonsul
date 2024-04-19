@@ -55,6 +55,7 @@ model LawyerProfile{
   lawyerId       Int
   alumnus        String?
   STRNumber      String?
+  experience     String?
   specialization LawyerSpecialization[]
 
   createdAt      DateTime        @default(now())

@@ -44,7 +44,7 @@ exports.getLawyersBySpecialization = async (req, res) => {
 
 exports.getLawyerProfile = async (req, res) => {
   try {
-    const { lawyerId } = req.user;
+    const { lawyerId } = req.params;
 
     const lawyer = await Lawyer.findLawyerById(lawyerId);
 
