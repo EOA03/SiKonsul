@@ -26,7 +26,7 @@ router.get(
 );
 
 router.get(
-  "/profile",
+  "/profile/:lawyerId",
   authMiddleware,
   lawyerController2.getLawyerProfile
 );

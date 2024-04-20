@@ -39,6 +39,8 @@ class userModel {
         name: true,
         email: true,
         NIK: true,
+        isPremium: true,
+        occupation: true,
       },
     });
   }
@@ -84,6 +86,106 @@ class userModel {
       data: { isPremium: true },
     });
   }
+
+  static async findLawyersBySpecialization({
+    specializationId,
+    search = "",
+    page = 1,
+    limit = 10,
+    orderBy = "rating:asc",
+    isPremium,
+  }) {
+    const pageNumber = parseInt(page);
+    const pageSize = parseInt(limit);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const [sortField, sortOrder] = orderBy.split(":");
+
+    const profiles = await prisma.lawyerSpecialization.findMany({
+      where: { specializationId: parseInt(specializationId) },
+      include: {
+        lawyerProfile: true,
+      },
+    });
+
+    const lawyerIds = profiles.map((profile) => profile.lawyerProfile.lawyerId);
+
+    let lawyers;
+
+    if (isPremium) {
+      lawyers = await prisma.lawyer.findMany({
+        where: {
+          id: { in: lawyerIds },
+          name: {
+            contains: search,
+          },
+        },
+        orderBy: {
+          [sortField]: sortOrder,
+        },
+        skip: offset,
+        take: pageSize,
+      });
+    } else {
+      const freeLawyersCount = 3;
+
+      const freeLawyers = await prisma.lawyer.findMany({
+        where: {
+          id: { in: lawyerIds },
+          name: {
+            contains: search,
+          },
+        },
+        orderBy: {
+          [sortField]: sortOrder,
+        },
+        take: freeLawyersCount,
+      });
+
+      lawyers = freeLawyers;
+    }
+
+    const totalRecords = await prisma.lawyer.count({
+      where: {
+        id: { in: lawyerIds },
+      },
+    });
+
+    return {
+      lawyers,
+      totalRecords,
+      totalPages: Math.ceil(totalRecords / pageSize),
+      currentPage: pageNumber,
+    };
+  }
+
+    static async findLawyerById(lawyerId) {
+    return await prisma.lawyer.findUnique({
+      where: { id: parseInt(lawyerId) },
+      select: {
+        id: true,
+        profile: {
+          select: {
+            alumnus: true,
+            STRNumber: true,
+            experience: true,
+            specialization: {
+              select: {
+                specialization: {
+                  select: {
+                    name: true,
+                  }
+                }
+              },
+            },
+            // You can include other fields of LawyerProfile here if needed
+          },
+        },
+      },
+    });
+  }  
 }
+
+
 
 module.exports = userModel;

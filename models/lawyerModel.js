@@ -19,6 +19,7 @@ class lawyerModel {
     description,
     alumnus,
     STRNumber,
+    experience,
     specializationIds
   ) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -54,6 +55,7 @@ class lawyerModel {
           create: {
             alumnus,
             STRNumber,
+            experience,
             specialization: {
               createMany: {
                 data: specializationIds.map((id) => ({ specializationId: id })),
@@ -167,16 +169,26 @@ class lawyerModel {
 
   static async findLawyerById(lawyerId) {
     return await prisma.lawyer.findUnique({
-      where: { id: lawyerId },
+      where: { id: parseInt(lawyerId) },
       select: {
         id: true,
+        name: true,
+        email: true,
+        NIK: true,
+        university: true,
+        description: true,
         profile: {
           select: {
             alumnus: true,
             STRNumber: true,
+            experience: true,
             specialization: {
               select: {
-                specializationId: true,
+                specialization: {
+                  select: {
+                    name: true,
+                  }
+                }
               },
             },
             // You can include other fields of LawyerProfile here if needed
