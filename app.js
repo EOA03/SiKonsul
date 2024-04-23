@@ -18,6 +18,10 @@ app.use(cors());
 
 applyMiddleware(app);
 
+app.get("/", (req, res) => {
+  res.send("Hello");
+});
+
 app.use("/api/user", userRoutes);
 app.use("/api/lawyer", lawyerRoutes);
 app.use("/api/news", newsRoutes);
