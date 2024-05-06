@@ -32,5 +32,6 @@ router.get(
 );
 
 router.get("/", lawyerController2.getAllLawyers);
+router.get("/:lawyerId", lawyerController2.getLawyerById);
 
 module.exports = router;
