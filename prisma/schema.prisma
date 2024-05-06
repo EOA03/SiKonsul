@@ -6,41 +6,43 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_DIRECT_URL")
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  NIK        String
-  role       Role     @default(USER)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  isPremium  Boolean  @default(false)
-  occupation String?
-
-  @@index([email], map: "idx_user_email")
+  id          Int        @id @default(autoincrement())
+  name        String
+  email       String     @unique
+  password    String
+  NIK         String
+  role        Role       @default(USER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  isPremium   Boolean    @default(false)
+  occupation  String?
+  ratings     Rating[]
+  @@index([email], name: "idx_user_email")
 }
 
 model Lawyer {
-  id          Int             @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
-  email       String          @unique
+  email       String        @unique
   password    String
   NIK         String
   role        Role
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  isPremium   Boolean         @default(false)
-  rating      Float           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  isPremium   Boolean       @default(false)
+  rating      Float         @default(0)
   address     String?
   description String?
   university  String?
   profile     LawyerProfile[]
-
-  @@index([email], map: "idx_lawyer_email")
+  ratings     Rating[]
+  @@index([email], name: "idx_lawyer_email")
 }
+
 
 model LawyerProfile {
   id             Int                    @id @default(autoincrement())
@@ -54,6 +56,17 @@ model LawyerProfile {
   specialization LawyerSpecialization[]
 
   @@index([lawyerId], map: "idx_lawyerprofile_lawyer")
+}
+
+model Rating {
+  id          Int      @id @default(autoincrement())
+  value       Float
+  userId      Int
+  lawyerId    Int
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  lawyer      Lawyer   @relation(fields: [lawyerId], references: [id])
+  @@index([userId, lawyerId], name: "idx_rating_user_lawyer")
 }
 
 model News {

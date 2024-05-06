@@ -12,6 +12,17 @@ exports.getAllLawyers = async (req, res) => {
   }
 };
 
+exports.getLawyerById = async (req, res) => {
+  try {
+    const { lawyerId } = req.params;
+    const lawyer = await Lawyer.findLawyerById(lawyerId);
+    return successResponse(res, "Lawyer fetched successfully", { lawyer });
+  } catch (error) {
+    console.error(error);
+    return errorResponse(res, "Server error while fetching lawyer", 500);
+  }
+};
+
 exports.getLawyersBySpecialization = async (req, res) => {
   try {
     const { specializationId } = req.params;
@@ -52,9 +63,15 @@ exports.getLawyerProfile = async (req, res) => {
       return res.status(404).json({ message: "Lawyer not found." });
     }
 
-    return successResponse(res, "Lawyer profile fetched successfully", { lawyer });
+    return successResponse(res, "Lawyer profile fetched successfully", {
+      lawyer,
+    });
   } catch (error) {
     console.error(error);
-    return errorResponse(res, "Server error while fetching lawyer profile", 500);
+    return errorResponse(
+      res,
+      "Server error while fetching lawyer profile",
+      500
+    );
   }
 };
