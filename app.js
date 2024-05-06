@@ -13,7 +13,8 @@ const lawyerRoutes = require("./routes/lawyerRoutes");
 const newsRoutes = require("./routes/newsRoute");
 const specializationRoutes = require("./routes/specializationRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
+// const uploadRoutes = require("./routes/uploadRoutes-firebase");
+const uploadRoutes = require("./routes/uploadRoutes-gcp");
 
 const app = express();
 app.use(cors());

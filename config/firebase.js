@@ -4,7 +4,7 @@ const serviceAccount = require("./sikonsul-firebase-adminsdk-14lg9-f18b5d8abd.js
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "sikonsul.appspot.com",
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET_URL,
 });
 
 const bucket = admin.storage().bucket();
