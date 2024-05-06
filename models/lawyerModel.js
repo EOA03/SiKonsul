@@ -163,6 +163,19 @@ class lawyerModel {
             },
           },
         },
+        ratings: {
+          select: {
+            id: true,
+            value: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -177,6 +190,7 @@ class lawyerModel {
         NIK: true,
         university: true,
         description: true,
+        rating: true,
         profile: {
           select: {
             alumnus: true,
@@ -187,16 +201,28 @@ class lawyerModel {
                 specialization: {
                   select: {
                     name: true,
-                  }
-                }
+                  },
+                },
               },
             },
-            // You can include other fields of LawyerProfile here if needed
+          },
+        },
+        ratings: {
+          select: {
+            id: true,
+            value: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
     });
-  }  
+  }
 }
 
 module.exports = lawyerModel;

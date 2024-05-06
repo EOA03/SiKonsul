@@ -1,86 +1,89 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_DIRECT_URL")
 }
 
-enum Role{
-  USER
-  LAWYER
-  ADMIN
-}
-
-model User{
-  id             Int             @id @default(autoincrement())
-  name           String
-  email          String          @unique
-  password       String          
-  NIK            String
-  occupation     String?
-  role           Role            @default(USER)
-  isPremium      Boolean         @default(false)
-
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-
+model User {
+  id          Int        @id @default(autoincrement())
+  name        String
+  email       String     @unique
+  password    String
+  NIK         String
+  role        Role       @default(USER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  isPremium   Boolean    @default(false)
+  occupation  String?
+  ratings     Rating[]
   @@index([email], name: "idx_user_email")
 }
 
-model Lawyer{
-  id             Int             @id @default(autoincrement())
-  name           String
-  email          String          @unique
-  password       String
-  NIK            String
-  address        String?
-  university     String?
-  description    String?
-  role           Role
-  isPremium      Boolean         @default(false)
-  rating         Float           @default(0)
-  profile        LawyerProfile[]
-
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-
+model Lawyer {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  password    String
+  NIK         String
+  role        Role
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  isPremium   Boolean       @default(false)
+  rating      Float         @default(0)
+  address     String?
+  description String?
+  university  String?
+  profile     LawyerProfile[]
+  ratings     Rating[]
   @@index([email], name: "idx_lawyer_email")
 }
 
-model LawyerProfile{
-  id             Int             @id @default(autoincrement())
+
+model LawyerProfile {
+  id             Int                    @id @default(autoincrement())
   lawyerId       Int
   alumnus        String?
   STRNumber      String?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
   experience     String?
+  lawyer         Lawyer                 @relation(fields: [lawyerId], references: [id], onDelete: Cascade)
   specialization LawyerSpecialization[]
 
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  @@index([lawyerId], map: "idx_lawyerprofile_lawyer")
+}
 
-  lawyer         Lawyer          @relation(fields: [lawyerId], references: [id], onDelete: Cascade)
-
-  @@index([lawyerId], name: "idx_lawyerprofile_lawyer")
+model Rating {
+  id          Int      @id @default(autoincrement())
+  value       Float
+  userId      Int
+  lawyerId    Int
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  lawyer      Lawyer   @relation(fields: [lawyerId], references: [id])
+  @@index([userId, lawyerId], name: "idx_rating_user_lawyer")
 }
 
 model News {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
-  url         String    @unique
+  url         String   @unique
   publishedAt DateTime
 
-  @@index([publishedAt], name: "idx_news_publishedAt")
+  @@index([publishedAt], map: "idx_news_publishedAt")
 }
 
 model Specialization {
-  id               Int                  @id @default(autoincrement())
-  name             String               @unique
-  lawyerProfiles   LawyerSpecialization[]
+  id             Int                    @id @default(autoincrement())
+  name           String                 @unique
+  lawyerProfiles LawyerSpecialization[]
 
-  @@index([name], name: "idx_specialization_name")
+  @@index([name], map: "idx_specialization_name")
 }
 
 model LawyerSpecialization {
@@ -90,4 +93,10 @@ model LawyerSpecialization {
   specialization   Specialization @relation(fields: [specializationId], references: [id])
 
   @@id([lawyerProfileId, specializationId])
+}
+
+enum Role {
+  USER
+  LAWYER
+  ADMIN
 }
