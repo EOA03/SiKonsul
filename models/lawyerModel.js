@@ -78,7 +78,9 @@ class lawyerModel {
   static generateToken(lawyerId) {
     const secret = process.env.JWT_SIGN;
     const tokenExpired = process.env.ACCESS_TOKEN_EXPIRATION;
-    return jwt.sign({ lawyerId }, secret, { expiresIn: tokenExpired });
+    return jwt.sign({ lawyerId, role: "LAWYER" }, secret, {
+      expiresIn: tokenExpired,
+    });
   }
 
   static async blockLawyer(lawyerId) {

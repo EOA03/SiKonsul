@@ -28,7 +28,9 @@ class userModel {
   static generateToken(userId) {
     const secret = process.env.JWT_SIGN;
     const tokenExpired = process.env.ACCESS_TOKEN_EXPIRATION;
-    return jwt.sign({ userId }, secret, { expiresIn: tokenExpired });
+    return jwt.sign({ userId, role: "USER" }, secret, {
+      expiresIn: tokenExpired,
+    });
   }
 
   static async findUserById(userId) {
