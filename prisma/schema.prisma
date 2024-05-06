@@ -21,6 +21,7 @@ model User {
   isPremium   Boolean    @default(false)
   occupation  String?
   ratings     Rating[]
+  profilePictureUrl String?
   @@index([email], name: "idx_user_email")
 }
 
@@ -38,6 +39,7 @@ model Lawyer {
   address     String?
   description String?
   university  String?
+  profilePictureUrl String?
   profile     LawyerProfile[]
   ratings     Rating[]
   @@index([email], name: "idx_lawyer_email")

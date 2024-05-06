@@ -13,6 +13,8 @@ const lawyerRoutes = require("./routes/lawyerRoutes");
 const newsRoutes = require("./routes/newsRoute");
 const specializationRoutes = require("./routes/specializationRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
+// const uploadRoutes = require("./routes/uploadRoutes-firebase");
+const uploadRoutes = require("./routes/uploadRoutes-gcp");
 
 const app = express();
 app.use(cors());
@@ -28,6 +30,7 @@ app.use("/api/lawyer", lawyerRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/specializations", specializationRoutes);
 app.use("/api/rating", ratingRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.use((req, res, next) => {
   console.log(req.method, req.path);
