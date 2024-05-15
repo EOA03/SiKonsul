@@ -5,6 +5,7 @@
 Discover the SiKonsul Web Application in action:
 
 - **Netlify**: [Visit SiKonsul on Netlify](https://sikonsul.netlify.app/)
+- **New Netlify**: [Visit SiKonsul on Netlify](https://sikonsul-dev.netlify.app/)
 
 ## Introduction
 
@@ -50,6 +51,15 @@ The SiKonsul_BE application utilizes a PostgreSQL database, elegantly managed by
 ## Usage
 
 With the backend server operational, SiKonsul_BE will process incoming requests as per the defined route handlers and controllers. We encourage developers to review the API documentation for detailed endpoint descriptions and interaction guidelines.
+
+## Additional Repo
+This project have dependency with several repo for User side and Lawyer side. You can check the repos at <br>
+
+### User Apps
+> https://github.com/next-3-revou/sikonsul-fe-dev
+
+### Lawyer Apps
+> https://github.com/next-3-revou/sikonsul-lawyer-dev
 
 ## API Documentation
 
